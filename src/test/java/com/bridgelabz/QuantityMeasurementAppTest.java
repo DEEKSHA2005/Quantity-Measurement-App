@@ -166,4 +166,62 @@ public class QuantityMeasurementAppTest {
             new QuantityMeasurementApp.Length(1.0, null);
         });
     }
+    @Test
+    public void testLength_YardToFeet_EquivalentValue() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.YARDS);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(3.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        assertTrue(l1.equals(l2));
+    }
+    @Test
+    public void testLength_YardToInches_EquivalentValue() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.YARDS);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(36.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        assertTrue(l1.equals(l2));
+    }
+    @Test
+    public void testLength_CentimeterToInches_EquivalentValue() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.CENTIMETERS);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(0.393701,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        assertTrue(l1.equals(l2));
+    }
+    @Test
+    public void testLength_MultiUnit_TransitiveProperty() {
+
+        QuantityMeasurementApp.Length yard =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.YARDS);
+
+        QuantityMeasurementApp.Length feet =
+                new QuantityMeasurementApp.Length(3.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length inches =
+                new QuantityMeasurementApp.Length(36.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        assertTrue(yard.equals(feet));
+        assertTrue(feet.equals(inches));
+        assertTrue(yard.equals(inches));
+    }
 }
