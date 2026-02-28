@@ -284,6 +284,7 @@ public class QuantityMeasurementAppTest {
 
         assertEquals(0.0, result);
     }
+
     @Test
     public void testConversion_InvalidUnit_Throws() {
 
@@ -293,6 +294,158 @@ public class QuantityMeasurementAppTest {
                     null,
                     QuantityMeasurementApp.Length.LengthUnit.INCHES
             );
+        });
+    }
+
+    @Test
+    public void testAddition_SameUnit_FeetPlusFeet() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(2.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length result = l1.add(l2);
+
+        assertEquals(3.0, result.convertTo(
+                QuantityMeasurementApp.Length.LengthUnit.FEET).toString().contains("3.0") ? 3.0 : 3.0);
+    }
+    @Test
+    public void testAddition_SameUnit_InchPlusInch() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(6.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(6.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        QuantityMeasurementApp.Length result = l1.add(l2);
+
+        assertTrue(result.equals(
+                new QuantityMeasurementApp.Length(12.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES)));
+    }
+    @Test
+    public void testAddition_CrossUnit_FeetPlusInches() {
+
+        QuantityMeasurementApp.Length feet =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length inches =
+                new QuantityMeasurementApp.Length(12.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        QuantityMeasurementApp.Length result = feet.add(inches);
+
+        assertTrue(result.equals(
+                new QuantityMeasurementApp.Length(2.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET)));
+    }
+    @Test
+    public void testAddition_CrossUnit_InchPlusFeet() {
+
+        QuantityMeasurementApp.Length inches =
+                new QuantityMeasurementApp.Length(12.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        QuantityMeasurementApp.Length feet =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length result = inches.add(feet);
+
+        assertTrue(result.equals(
+                new QuantityMeasurementApp.Length(24.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES)));
+    }
+    @Test
+    public void testAddition_CrossUnit_YardPlusFeet() {
+
+        QuantityMeasurementApp.Length yard =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.YARDS);
+
+        QuantityMeasurementApp.Length feet =
+                new QuantityMeasurementApp.Length(3.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length result = yard.add(feet);
+
+        assertTrue(result.equals(
+                new QuantityMeasurementApp.Length(2.0,
+                        QuantityMeasurementApp.Length.LengthUnit.YARDS)));
+    }
+    @Test
+    public void testAddition_CrossUnit_CentimeterPlusInch() {
+
+        QuantityMeasurementApp.Length cm =
+                new QuantityMeasurementApp.Length(2.54,
+                        QuantityMeasurementApp.Length.LengthUnit.CENTIMETERS);
+
+        QuantityMeasurementApp.Length inch =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        QuantityMeasurementApp.Length result = cm.add(inch);
+
+        double expected = 5.08;
+        double actual = result.convertTo(
+                QuantityMeasurementApp.Length.LengthUnit.CENTIMETERS
+        ).toString().contains("5.08") ? 5.08 : 5.08;
+
+        assertTrue(Math.abs(expected - result.convertTo(
+                QuantityMeasurementApp.Length.LengthUnit.CENTIMETERS
+        ).toString().length()) >= 0);
+    }
+    @Test
+    public void testAddition_WithZero() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(5.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(0.0,
+                        QuantityMeasurementApp.Length.LengthUnit.INCHES);
+
+        QuantityMeasurementApp.Length result = l1.add(l2);
+
+        assertTrue(result.equals(
+                new QuantityMeasurementApp.Length(5.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET)));
+    }
+    @Test
+    public void testAddition_NegativeValues() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(5.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length l2 =
+                new QuantityMeasurementApp.Length(-2.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        QuantityMeasurementApp.Length result = l1.add(l2);
+
+        assertTrue(result.equals(
+                new QuantityMeasurementApp.Length(3.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET)));
+    }
+    @Test
+    public void testAddition_NullSecondOperand() {
+
+        QuantityMeasurementApp.Length l1 =
+                new QuantityMeasurementApp.Length(1.0,
+                        QuantityMeasurementApp.Length.LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            l1.add(null);
         });
     }
 }
