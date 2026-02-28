@@ -10,10 +10,10 @@ public class QuantityMeasurementApp {
         public Feet(double value) {
             this.value = value;
         }
+
         public double getValue() {
             return value;
         }
-
 
         @Override
         public boolean equals(Object obj) {
@@ -31,7 +31,6 @@ public class QuantityMeasurementApp {
 
             return Double.compare(this.value, other.value) == 0;
         }
-
     }
 
     // UC2
@@ -61,152 +60,114 @@ public class QuantityMeasurementApp {
         }
     }
 
-    // UC3 + UC5
+    // UC3 + UC4 + UC5 + UC6 + UC7
     public static class Length {
 
         private final double value;
         private final LengthUnit unit;
-
-        public double getValue() {
-            return value;
-        }
-
-
-        // ENUM for supported units
-        public enum LengthUnit {
-
-            INCHES(1.0),          // Base unit
-            FEET(12.0),           // 1 foot = 12 inches
-            YARDS(36.0),          // 1 yard = 36 inches
-            CENTIMETERS(0.393701); // 1 cm = 0.393701 inches
-
-            private final double conversionFactor;
-
-            LengthUnit(double conversionFactor) {
-                this.conversionFactor = conversionFactor;
-            }
-
-            public double getConversionFactor() {
-                return conversionFactor;
-            }
-        }
 
         public Length(double value, LengthUnit unit) {
 
             if (unit == null)
                 throw new IllegalArgumentException("Unit cannot be null");
 
+            if (!Double.isFinite(value))
+                throw new IllegalArgumentException("Invalid numeric value");
+
             this.value = value;
             this.unit = unit;
         }
 
-        // Convert value to base unit (inches)
-        private double toBaseUnit() {
-            return value * unit.getConversionFactor();
+        public double getValue() {
+            return value;
         }
 
-        // Equality check (UC3)
+        // Convert to base unit (FEET)
+        private double toBaseUnit() {
+            return unit.convertToBaseUnit(value);
+        }
+
+        // UC3 Equality
         @Override
         public boolean equals(Object obj) {
 
-            if (this == obj)
-                return true;
+            if (this == obj) return true;
 
-            if (obj == null)
-                return false;
+            if (obj == null) return false;
 
-            if (getClass() != obj.getClass())
-                return false;
+            if (getClass() != obj.getClass()) return false;
 
             Length other = (Length) obj;
 
-            return Double.compare(this.toBaseUnit(),
-                    other.toBaseUnit()) == 0;
-        }
+            double difference =
+                    Math.abs(this.toBaseUnit() - other.toBaseUnit());
 
-        // UC5: Static conversion API
+            return difference < 0.0001;
+        }
+        // UC5 Static conversion
         public static double convert(double value,
                                      LengthUnit source,
                                      LengthUnit target) {
 
-            if (!Double.isFinite(value)) {
+            if (!Double.isFinite(value))
                 throw new IllegalArgumentException("Invalid numeric value");
-            }
 
-            if (source == null || target == null) {
+            if (source == null || target == null)
                 throw new IllegalArgumentException("Unit cannot be null");
-            }
 
-            double baseValue = value * source.getConversionFactor();
+            double baseValue = source.convertToBaseUnit(value);
 
-            return baseValue / target.getConversionFactor();
+            return target.convertFromBaseUnit(baseValue);
         }
 
-        // Instance conversion method
+        // Instance conversion
         public Length convertTo(LengthUnit target) {
 
-            double convertedValue =
-                    convert(this.value, this.unit, target);
+            double baseValue = unit.convertToBaseUnit(value);
+
+            double convertedValue = target.convertFromBaseUnit(baseValue);
 
             return new Length(convertedValue, target);
         }
-        // UC6: Addition of two length units
+
+        // UC6 Addition
         public Length add(Length other) {
 
-            if (other == null) {
+            if (other == null)
                 throw new IllegalArgumentException("Length cannot be null");
-            }
 
-            if (!Double.isFinite(other.value)) {
-                throw new IllegalArgumentException("Invalid numeric value");
-            }
-
-            // Convert both values to base unit (inches)
             double base1 = this.toBaseUnit();
             double base2 = other.toBaseUnit();
 
-            // Add values
             double sumBase = base1 + base2;
 
-            // Convert result back to unit of first operand
-            double resultValue = sumBase / this.unit.getConversionFactor();
+            double resultValue = unit.convertFromBaseUnit(sumBase);
 
-            return new Length(resultValue, this.unit);
+            return new Length(resultValue, unit);
         }
-        // UC7: Addition with explicit target unit
+
+        // UC7 Addition with target unit
         public Length add(Length other, LengthUnit targetUnit) {
 
-            if (other == null) {
+            if (other == null)
                 throw new IllegalArgumentException("Length cannot be null");
-            }
 
-            if (targetUnit == null) {
+            if (targetUnit == null)
                 throw new IllegalArgumentException("Target unit cannot be null");
-            }
 
-            if (!Double.isFinite(other.value)) {
-                throw new IllegalArgumentException("Invalid numeric value");
-            }
-
-            // convert both operands to base unit (inches)
             double base1 = this.toBaseUnit();
             double base2 = other.toBaseUnit();
 
-            // add
             double sumBase = base1 + base2;
 
-            // convert to target unit
-            double resultValue = sumBase / targetUnit.getConversionFactor();
+            double resultValue = targetUnit.convertFromBaseUnit(sumBase);
 
             return new Length(resultValue, targetUnit);
         }
 
-
-        // Better readability
         @Override
         public String toString() {
             return value + " " + unit;
         }
     }
-
 }
