@@ -14,6 +14,7 @@ public class QuantityMeasurementApp {
             return value;
         }
 
+
         @Override
         public boolean equals(Object obj) {
 
@@ -65,6 +66,11 @@ public class QuantityMeasurementApp {
 
         private final double value;
         private final LengthUnit unit;
+
+        public double getValue() {
+            return value;
+        }
+
 
         // ENUM for supported units
         public enum LengthUnit {
@@ -167,6 +173,34 @@ public class QuantityMeasurementApp {
 
             return new Length(resultValue, this.unit);
         }
+        // UC7: Addition with explicit target unit
+        public Length add(Length other, LengthUnit targetUnit) {
+
+            if (other == null) {
+                throw new IllegalArgumentException("Length cannot be null");
+            }
+
+            if (targetUnit == null) {
+                throw new IllegalArgumentException("Target unit cannot be null");
+            }
+
+            if (!Double.isFinite(other.value)) {
+                throw new IllegalArgumentException("Invalid numeric value");
+            }
+
+            // convert both operands to base unit (inches)
+            double base1 = this.toBaseUnit();
+            double base2 = other.toBaseUnit();
+
+            // add
+            double sumBase = base1 + base2;
+
+            // convert to target unit
+            double resultValue = sumBase / targetUnit.getConversionFactor();
+
+            return new Length(resultValue, targetUnit);
+        }
+
 
         // Better readability
         @Override
@@ -174,4 +208,5 @@ public class QuantityMeasurementApp {
             return value + " " + unit;
         }
     }
+
 }
