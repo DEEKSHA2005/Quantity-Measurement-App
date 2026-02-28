@@ -4,10 +4,14 @@ public class QuantityMeasurementApp {
 
     // UC1
     public static class Feet {
+
         private final double value;
 
         public Feet(double value) {
             this.value = value;
+        }
+        public double getValue() {
+            return value;
         }
 
         @Override
@@ -26,6 +30,7 @@ public class QuantityMeasurementApp {
 
             return Double.compare(this.value, other.value) == 0;
         }
+
     }
 
     // UC2
@@ -138,6 +143,29 @@ public class QuantityMeasurementApp {
                     convert(this.value, this.unit, target);
 
             return new Length(convertedValue, target);
+        }
+        // UC6: Addition of two length units
+        public Length add(Length other) {
+
+            if (other == null) {
+                throw new IllegalArgumentException("Length cannot be null");
+            }
+
+            if (!Double.isFinite(other.value)) {
+                throw new IllegalArgumentException("Invalid numeric value");
+            }
+
+            // Convert both values to base unit (inches)
+            double base1 = this.toBaseUnit();
+            double base2 = other.toBaseUnit();
+
+            // Add values
+            double sumBase = base1 + base2;
+
+            // Convert result back to unit of first operand
+            double resultValue = sumBase / this.unit.getConversionFactor();
+
+            return new Length(resultValue, this.unit);
         }
 
         // Better readability
