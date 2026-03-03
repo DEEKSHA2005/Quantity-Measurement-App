@@ -2,7 +2,7 @@ package com.bridgelabz;
 
 import java.util.function.DoubleBinaryOperator;
 
-public class Quantity<U extends IMeasurable> {
+public class Quantity<U extends Enum<U> & IMeasurable> {
 
     private final double value;
     private final U unit;
@@ -75,7 +75,7 @@ public class Quantity<U extends IMeasurable> {
         if (other == null)
             throw new IllegalArgumentException("Other quantity cannot be null");
 
-        if (!unit.getClass().equals(other.unit.getClass()))
+        if (!unit.getDeclaringClass().equals(other.unit.getDeclaringClass()))
             throw new IllegalArgumentException("Cannot operate on different measurement categories");
 
         if (!Double.isFinite(this.value) || !Double.isFinite(other.value))
@@ -87,9 +87,10 @@ public class Quantity<U extends IMeasurable> {
 
     // 🔹 Centralized Arithmetic Core
 
-    private double performBaseArithmetic(
-            Quantity<U> other,
-            ArithmeticOperation operation) {
+    private double performBaseArithmetic(Quantity<U> other,
+                                         ArithmeticOperation operation) {
+
+        this.unit.validateOperationSupport(operation.name());
 
         double base1 = this.toBaseUnit();
         double base2 = other.toBaseUnit();
@@ -155,18 +156,17 @@ public class Quantity<U extends IMeasurable> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj == null || getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
         Quantity<?> other = (Quantity<?>) obj;
 
-        if (!unit.getClass().equals(other.unit.getClass()))
+        if (!unit.getDeclaringClass()
+                .equals(other.unit.getDeclaringClass()))
             return false;
 
-        return Double.compare(this.toBaseUnit(), other.toBaseUnit()) == 0;
+        double difference = Math.abs(this.toBaseUnit() - other.toBaseUnit());
+        return difference < 0.0001;   // tolerance comparison
     }
 
     @Override
