@@ -91,23 +91,24 @@ public class QuantityMeasurementApp {
         @Override
         public boolean equals(Object obj) {
 
-            if (this == obj) return true;
+            if (this == obj)
+                return true;
 
-            if (obj == null) return false;
+            if (obj == null)
+                return false;
 
-            if (getClass() != obj.getClass()) return false;
+            if (getClass() != obj.getClass())
+                return false;
 
             Length other = (Length) obj;
 
-            double difference =
-                    Math.abs(this.toBaseUnit() - other.toBaseUnit());
+            double difference = Math.abs(this.toBaseUnit() - other.toBaseUnit());
 
             return difference < 0.0001;
         }
+
         // UC5 Static conversion
-        public static double convert(double value,
-                                     LengthUnit source,
-                                     LengthUnit target) {
+        public static double convert(double value, LengthUnit source, LengthUnit target) {
 
             if (!Double.isFinite(value))
                 throw new IllegalArgumentException("Invalid numeric value");
@@ -116,7 +117,6 @@ public class QuantityMeasurementApp {
                 throw new IllegalArgumentException("Unit cannot be null");
 
             double baseValue = source.convertToBaseUnit(value);
-
             return target.convertFromBaseUnit(baseValue);
         }
 
@@ -124,7 +124,6 @@ public class QuantityMeasurementApp {
         public Length convertTo(LengthUnit target) {
 
             double baseValue = unit.convertToBaseUnit(value);
-
             double convertedValue = target.convertFromBaseUnit(baseValue);
 
             return new Length(convertedValue, target);

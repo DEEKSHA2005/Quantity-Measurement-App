@@ -1,15 +1,14 @@
 package com.bridgelabz;
 
-public enum LengthUnit {
+public enum WeightUnit {
 
-    FEET(1.0),
-    INCHES(1.0 / 12.0),
-    YARDS(3.0),
-    CENTIMETERS(1.0 / 30.48);
+    KILOGRAM(1.0),
+    GRAM(0.001),
+    POUND(0.453592);
 
     private final double conversionFactor;
 
-    LengthUnit(double conversionFactor) {
+    WeightUnit(double conversionFactor) {
         this.conversionFactor = conversionFactor;
     }
 
@@ -17,12 +16,12 @@ public enum LengthUnit {
         return conversionFactor;
     }
 
-    // Convert value in this unit → FEET (base unit)
+    // Convert to base unit (Kilogram)
     public double convertToBaseUnit(double value) {
         return value * conversionFactor;
     }
 
-    // Convert FEET (base unit) → this unit
+    // Convert from base unit (Kilogram)
     public double convertFromBaseUnit(double baseValue) {
         return baseValue / conversionFactor;
     }
