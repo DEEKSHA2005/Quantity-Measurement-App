@@ -3,6 +3,9 @@ package com.bridgelabz;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import com.bridgelabz.LengthUnit;
+import com.bridgelabz.Quantity;
+import com.bridgelabz.WeightUnit;
+import com.bridgelabz.VolumeUnit;
 
 import com.bridgelabz.QuantityMeasurementApp.Feet;
 
@@ -760,5 +763,38 @@ public class QuantityMeasurementAppTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> length.subtract((Quantity) weight));
+    }
+    @Test
+    public void testValidation_NullOperand_AllOperations() {
+        Quantity<LengthUnit> q = new Quantity<>(10.0, LengthUnit.FEET);
+
+        assertThrows(IllegalArgumentException.class, () -> q.add(null));
+        assertThrows(IllegalArgumentException.class, () -> q.subtract(null));
+        assertThrows(IllegalArgumentException.class, () -> q.divide(null));
+    }
+    @Test
+    public void testValidation_CrossCategory_AllOperations() {
+        Quantity<LengthUnit> length = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<WeightUnit> weight = new Quantity<>(5.0, WeightUnit.KILOGRAM);
+
+        assertThrows(IllegalArgumentException.class, () -> length.add((Quantity) weight));
+        assertThrows(IllegalArgumentException.class, () -> length.subtract((Quantity) weight));
+        assertThrows(IllegalArgumentException.class, () -> length.divide((Quantity) weight));
+    }
+    @Test
+    public void testDivision_ByZero_Length() {
+        Quantity<LengthUnit> q1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(0.0, LengthUnit.FEET);
+
+        assertThrows(ArithmeticException.class, () -> q1.divide(q2));
+    }
+    @Test
+    public void testRounding_TwoDecimalPlaces() {
+        Quantity<LengthUnit> q1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(2.3333, LengthUnit.FEET);
+
+        Quantity<LengthUnit> result = q1.add(q2);
+
+        assertEquals(3.33, result.getValue(), 0.01);
     }
 }
