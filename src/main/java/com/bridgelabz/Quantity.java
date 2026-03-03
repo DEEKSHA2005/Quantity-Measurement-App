@@ -28,6 +28,11 @@ public class Quantity<U extends IMeasurable> {
         return unit.convertToBaseUnit(value);
     }
 
+    private double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
+
+
     public Quantity<U> convertTo(U targetUnit) {
 
         if (targetUnit == null)
@@ -70,6 +75,60 @@ public class Quantity<U extends IMeasurable> {
         double result = targetUnit.convertFromBaseUnit(sum);
 
         return new Quantity<>(result, targetUnit);
+    }
+
+    // Subtraction (implicit target unit)
+    public Quantity<U> subtract(Quantity<U> other) {
+        if (other == null)
+            throw new IllegalArgumentException("Other quantity cannot be null");
+
+        if (!unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Cannot subtract different measurement categories");
+
+        double base1 = this.toBaseUnit();
+        double base2 = other.toBaseUnit();
+
+        double resultBase = base1 - base2;
+        double result = unit.convertFromBaseUnit(resultBase);
+
+        return new Quantity<>(result, unit);
+    }
+
+    // Subtraction (explicit target unit)
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+        if (other == null)
+            throw new IllegalArgumentException("Other quantity cannot be null");
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        if (!unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Cannot subtract different measurement categories");
+
+        double base1 = this.toBaseUnit();
+        double base2 = other.toBaseUnit();
+
+        double resultBase = base1 - base2;
+        double result = targetUnit.convertFromBaseUnit(resultBase);
+
+        return new Quantity<>(result, targetUnit);
+    }
+
+    // Division (returns dimensionless scalar)
+    public double divide(Quantity<U> other) {
+        if (other == null)
+            throw new IllegalArgumentException("Other quantity cannot be null");
+
+        if (!unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Cannot divide different measurement categories");
+
+        double base1 = this.toBaseUnit();
+        double base2 = other.toBaseUnit();
+
+        if (base2 == 0)
+            throw new ArithmeticException("Division by zero");
+
+        return base1 / base2;
     }
 
     @Override
