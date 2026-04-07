@@ -32,4 +32,19 @@ public enum LengthUnit implements IMeasurable {
     public String getUnitName() {
         return name();
     }
+
+    @Override
+    public String getMeasurementType() {
+        return "Length";
+    }
+
+    @Override
+    public boolean supportsArithmetic() {
+        return true;
+    }
+
+    @Override
+    public void validateOperationSupport(String operation) {
+        // Length supports all arithmetic → do nothing
+    }
 }

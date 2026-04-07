@@ -55,4 +55,8 @@ public enum TemperatureUnit implements IMeasurable {
         return 1.0;
     }
 
+    @Override
+    public String getMeasurementType() {
+        return "Temperature";
+    }
 }

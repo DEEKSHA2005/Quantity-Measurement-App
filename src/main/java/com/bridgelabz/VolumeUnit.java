@@ -31,4 +31,19 @@ public enum VolumeUnit implements IMeasurable {
     public String getUnitName() {
         return this.name();
     }
+
+    @Override
+    public String getMeasurementType() {
+        return "Volume";
+    }
+
+    @Override
+    public boolean supportsArithmetic() {
+        return true;
+    }
+
+    @Override
+    public void validateOperationSupport(String operation) {
+        // supported
+    }
 }
