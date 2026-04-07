@@ -31,4 +31,19 @@ public enum WeightUnit implements IMeasurable {
     public String getUnitName() {
         return name();
     }
+
+    @Override
+    public String getMeasurementType() {
+        return "Weight";
+    }
+
+    @Override
+    public boolean supportsArithmetic() {
+        return true;
+    }
+
+    @Override
+    public void validateOperationSupport(String operation) {
+        // supported
+    }
 }
