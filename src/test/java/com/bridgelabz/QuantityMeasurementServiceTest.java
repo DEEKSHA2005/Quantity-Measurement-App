@@ -2,7 +2,6 @@ package com.bridgelabz;
 
 import com.bridgelabz.controller.QuantityMeasurementController;
 import com.bridgelabz.dto.QuantityDTO;
-import com.bridgelabz.repository.QuantityMeasurementCacheRepository;
 import com.bridgelabz.service.QuantityMeasurementServiceImpl;
 import org.junit.jupiter.api.Test;
 
@@ -11,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QuantityMeasurementServiceTest {
 
     private QuantityMeasurementController getController() {
-        QuantityMeasurementCacheRepository repo =
-                QuantityMeasurementCacheRepository.getInstance();
+
         QuantityMeasurementServiceImpl service =
-                new QuantityMeasurementServiceImpl(repo);
+                new QuantityMeasurementServiceImpl();
+
         return new QuantityMeasurementController(service);
     }
 
