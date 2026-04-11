@@ -7,14 +7,18 @@ import com.bridgelabz.LengthUnit;
 import com.bridgelabz.WeightUnit;
 import com.bridgelabz.VolumeUnit;
 import com.bridgelabz.TemperatureUnit;
-import com.bridgelabz.repository.QuantityMeasurementDatabaseRepository;
 import com.bridgelabz.exception.QuantityMeasurementException;
+import com.bridgelabz.entity.QuantityMeasurementEntity;
+import com.bridgelabz.repository.QuantityMeasurementRepository;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
+@Service
 public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
 
-    private final QuantityMeasurementDatabaseRepository dbRepo =
-            new QuantityMeasurementDatabaseRepository();
+    @Autowired
+    private QuantityMeasurementRepository repository;
 
     private QuantityModel<IMeasurable> toModel(QuantityDTO dto) {
 
@@ -89,8 +93,12 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
                 m1.getUnit().getMeasurementType()
         );
 
-        // SAVE TO DB
-        dbRepo.save(result);
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result.getValue());
+        entity.setUnit(result.getUnit());
+        entity.setType(result.getMeasurementType());
+
+        repository.save(entity);
 
         return result;
     }
@@ -122,8 +130,12 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
                 m1.getUnit().getUnitName(),
                 m1.getUnit().getMeasurementType()
         );
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result.getValue());
+        entity.setUnit(result.getUnit());
+        entity.setType(result.getMeasurementType());
 
-        dbRepo.save(result);
+        repository.save(entity);
 
         return result;
     }
@@ -147,8 +159,12 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
                 target.getUnitName(),
                 target.getMeasurementType()
         );
+        QuantityMeasurementEntity entity = new QuantityMeasurementEntity();
+        entity.setValue(result.getValue());
+        entity.setUnit(result.getUnit());
+        entity.setType(result.getMeasurementType());
 
-        dbRepo.save(result);
+        repository.save(entity);
 
         return result;
     }
@@ -168,13 +184,6 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         double base2 = m2.getUnit().convertToBaseUnit(m2.getValue());
 
         boolean result = Math.abs(base1 - base2) < 0.01;
-
-        // optional save
-        dbRepo.save(new QuantityDTO(
-                result ? 1 : 0,
-                "RESULT",
-                "COMPARE"
-        ));
 
         return result;
     }

@@ -4,7 +4,7 @@ import com.bridgelabz.controller.QuantityMeasurementController;
 import com.bridgelabz.dto.QuantityDTO;
 import com.bridgelabz.service.QuantityMeasurementServiceImpl;
 
-public class QuantityMeasurementApp {
+public class QuantityMeasurementApp_OLD {
 
     public static void main(String[] args) {
 
