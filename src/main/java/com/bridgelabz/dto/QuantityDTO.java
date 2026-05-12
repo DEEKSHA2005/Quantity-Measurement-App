@@ -6,38 +6,46 @@ public class QuantityDTO {
     private String unit;
     private String measurementType;
 
-    // Default constructor
-    public QuantityDTO() {}
+    // Default Constructor
+    public QuantityDTO() {
+    }
 
-    // Parameterized constructor
-    public QuantityDTO(double value, String unit, String measurementType) {
+    // Parameterized Constructor
+    public QuantityDTO(double value,
+                       String unit,
+                       String measurementType) {
+
         this.value = value;
         this.unit = unit;
         this.measurementType = measurementType;
     }
 
-    // Getters
+    // Getter
     public double getValue() {
         return value;
     }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public String getMeasurementType() {
-        return measurementType;
-    }
-
-    // Setters
+    // Setter
     public void setValue(double value) {
         this.value = value;
     }
 
+    // Getter
+    public String getUnit() {
+        return unit;
+    }
+
+    // Setter
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
+    // Getter
+    public String getMeasurementType() {
+        return measurementType;
+    }
+
+    // Setter
     public void setMeasurementType(String measurementType) {
         this.measurementType = measurementType;
     }

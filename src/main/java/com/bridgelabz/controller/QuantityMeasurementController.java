@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/quantity")
 public class QuantityMeasurementController {
 

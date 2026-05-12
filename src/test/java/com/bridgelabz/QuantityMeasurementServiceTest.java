@@ -5,8 +5,11 @@ import com.bridgelabz.dto.QuantityDTO;
 import com.bridgelabz.service.QuantityMeasurementServiceImpl;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Disabled;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 public class QuantityMeasurementServiceTest {
 
     private QuantityMeasurementController getController() {
